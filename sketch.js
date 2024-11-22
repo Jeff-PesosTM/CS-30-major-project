@@ -17,13 +17,12 @@ function rightClick(event) {
 }
 
 function preload() {
-  bombSprite = loadImage("assets/bomb.png");
-  flagSprite = loadImage("assets/flag.png");
-  tileSprite = loadImage("assets/tile.jpg");
+  // bombSprite = loadImage("assets/bomb.png");
+  // flagSprite = loadImage("assets/flag.png");
+  // tileSprite = loadImage("assets/tile.jpg");
 }
 
 function setup() {
-  //creates largest square within window
   createCanvas(windowWidth, windowHeight);
   grid = createArray(GRID_SIZE);
   cellSize = width / GRID_SIZE;
@@ -35,6 +34,7 @@ function draw() {
   displayGrid();
   checkMousePress();
 }
+
 
 class Enemy {
   constructor(x, y) {
@@ -98,45 +98,10 @@ function createArray(howLarge) {
   return newArray;
 }
 
-//displays the grid and restarts when r key is pressed
-function displayGrid() {
-  for (let y = 0; y < GRID_SIZE; y++) {
-    for (let x = 0; x < GRID_SIZE; x++){
-      grid[y][x].showCells();
-    }
-  }
-  if (keyIsDown(82)) {
-    startGame();
-  }
-}
-
-//function that clears 3x3 area around 1st click tile
-function firstClickSafety(x, y) {
-  for (let i = -1; i < 2; i++) {
-    for (let j = -1; j < 2; j++){
-      //makes sure the cell is within the grid to prevent errors
-      if (x + j > -1 && x + j < GRID_SIZE && y + i > -1 && y + i < GRID_SIZE) {
-        if (grid[y + i][x + j].isBomb) {
-          grid[y + i][x + j].isBomb = false;
-          bombAmount--;
-        }
-
-        //rechecks cells adjacent to a deleted bomb to make sure they display the right bomb amounts
-        for (let z = -1; z < 2; z++) {
-          for (let k = -1; k < 2; k++){
-            // makes sure the cell is within the grid to prevent errors
-            if (x + k + j > -1 && x + j + k < GRID_SIZE && y + z + i > -1 && y + i + z < GRID_SIZE) {
-              grid[y + z + i][x + k + j].checkAdjacentCells();
-            }
-          }
-        }
-        grid[y + i][x + j].isRevealed;
-      }
-    }
-  }
-  isFirstClick = false;
-  whenGameStart = millis();
-}
+// for (let i = -1; i < 2; i++) {
+//   for (let j = -1; j < 2; j++){
+//     //makes sure the cell is within the grid to prevent errors
+//     if (x + j > -1 && x + j < GRID_SIZE && y + i > -1 && y + i < GRID_SIZE) {
 
 //used during setup, and when game is reset
 function startGame() {
@@ -144,13 +109,6 @@ function startGame() {
   for (let y = 0; y < GRID_SIZE; y++) {
     for (let x = 0; x < GRID_SIZE; x++) {
       grid[y][x] = new Cell(y*cellSize, x*cellSize, cellSize);
-    } 
-  }
-
-  //check adjacent cells in the grid (neighbours)
-  for (let y = 0; y < GRID_SIZE; y++) {
-    for (let x = 0; x < GRID_SIZE; x++) {
-      grid[y][x].checkAdjacentCells();
     } 
   }
 }
