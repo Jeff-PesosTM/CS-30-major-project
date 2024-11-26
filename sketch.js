@@ -4,14 +4,22 @@
 
 let grid;
 let cell = {
-  width: 0,
-  height: 0,
+  size: 0,
 };
 
 let map = {
   width: 16,
   height: 9,
+  path: 1,
+  open: 0,
+  easy: 0,
 };
+
+function preload() {
+  grassIMG = loadImage("assets/grass.png");
+  pathIMG = loadImage("assets/pavement.png");
+  map.easy = loadJSON("easy_map.json");
+}
 
 //prevents right click from making context menu show up
 addEventListener("contextmenu", rightClick, false);
@@ -22,16 +30,15 @@ function rightClick(event) {
 //16 by 9 grid
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  cell.width = windowWidth / map.width;
-  cell.height = windowHeight / map.height;
-  grid = createArray();
+  cell.size = windowWidth / map.width;
+  grid = map.easy;
 }
 
 function draw() {
   background(0);
-  startGame();
+  //startGame();
+  displayGrid();
 }
-
 
 class Enemy {
   constructor(x, y) {
@@ -61,17 +68,27 @@ class Tower {
   }
 
   attackEnemy() {
-    
+    new Projectile(this.x, this.y, this.findEnemy(), 50, 5);
+  }
+}
+
+class Projectile {
+  constructor(x, y, direction, speed, pierce) {
+    this.x = x;
+    this.y = y;
+    this.size = 50;
+    this.direction = direction;
+    this.speed = speed;
+    this.pierce = pierce;
   }
 }
 
 //the map, used to easily distinguish path cell from non path cell
 class Cells {
-  constructor(x, y) {
+  constructor(x, y, size) {
     this.x = x;
     this.y = y;
-    this.width = cell.width;
-    this.height = cell.height;
+    this.size = size;
   }
 }
 
@@ -89,7 +106,20 @@ function startGame() {
   //creates cell objects
   for (let y = 0; y < map.height; y++) {
     for (let x = 0; x < map.width; x++) {
-      grid[y][x] = new Cells(y * cell.height, x * cell.width);
-    } 
+      grid[y][x] = new Cells(y * cell.height, x * cell.width, cell.size);
+    }
+  }
+}
+
+function displayGrid() {
+  for (let y = 0; y < map.height; y++) {
+    for (let x = 0; x < map.width; x++) {
+      if (grid[y][x] === map.open) {
+        image(grassIMG, x*cell.size, y*cell.size, cell.size, cell.size);
+      }
+      if (grid[y][x] === map.path) {
+        image(pathIMG, x*cell.size, y*cell.size, cell.size, cell.size);
+      }
+    }
   }
 }
