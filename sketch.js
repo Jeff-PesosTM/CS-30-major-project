@@ -32,12 +32,14 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   cell.size = windowWidth / map.width;
   grid = map.easy;
+  testEnemy = new Enemy(0,0);
 }
 
 function draw() {
   background(0);
   //startGame();
   displayGrid();
+  testEnemy.moveToPoint();
 }
 
 class Enemy {
@@ -45,14 +47,44 @@ class Enemy {
     this.x = x;
     this.y = y;
     this.size = 50;
+    this.width = 100;
+    this.height = 100;
+    this.waypointIndex = 0;
+    this.center = {
+      x: this.x + this.width / 2,
+      y: this.y + this.height / 2,
+    };
+    this.health = 100;
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
   }
 
   findNextPoint() {
     //figure out the vector of the next point the enemy has to move to
   }
 
-  moveToPoint() {
+  moveToPoint(xcor, ycor) {
     //moves to the point given by the findNextPoint function
+    let waypoint = {
+      x: 100,
+      y: 100,
+    };
+    circle(this.x,this.y, 50);
+    let yDistance = waypoint.y - this.center.y;
+    let xDistance = waypoint.x - this.center.x;
+    let angle = Math.atan2(yDistance, xDistance);
+    let speed = 3;
+
+    this.velocity.x = Math.cos(angle) * speed;
+    this.velocity.y = Math.sin(angle) * speed;
+
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    if (Math.abs(Math.round(this.center.x) - Math.round(waypoint.x)) < Math.abs(this.velocity.x) && Math.abs(Math.round(this.center.y) - Math.round(waypoint.y)) < Math.abs(this.velocity.y) && this.waypointIndex < waypoint.length - 1) {
+      this.waypointIndex++;
+    }
   }
 }
 
@@ -69,6 +101,12 @@ class Tower {
 
   attackEnemy() {
     new Projectile(this.x, this.y, this.findEnemy(), 50, 5);
+  }
+}
+
+class Soldier extends Tower {
+  contructor(x, y) {
+
   }
 }
 
