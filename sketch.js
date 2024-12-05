@@ -2,7 +2,8 @@
 // Grady chovan
 // start date: 11/19/2024
 
-let grid;
+let grid = [];
+let newGrid = [];
 let cell = {
   size: 0,
 };
@@ -10,9 +11,8 @@ let cell = {
 let map = {
   width: 16,
   height: 9,
-  path: 1,
-  open: 0,
-  easy: 0,
+  path: false,
+  easy: "easy map",
 };
 
 function preload() {
@@ -37,7 +37,7 @@ function setup() {
 
 function draw() {
   background(0);
-  //startGame();
+  startGame();
   displayGrid();
   testEnemy.moveToPoint();
 }
@@ -68,7 +68,7 @@ class Enemy {
   moveToPoint(xcor, ycor) {
     //moves to the point given by the findNextPoint function
     let waypoint = {
-      x: 100,
+      x: 200,
       y: 100,
     };
     circle(this.x,this.y, 50);
@@ -88,63 +88,28 @@ class Enemy {
   }
 }
 
-class Tower {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.size = 50;
-  }
-
-  findEnemy() {
-
-  }
-
-  attackEnemy() {
-    new Projectile(this.x, this.y, this.findEnemy(), 50, 5);
-  }
-}
-
-class Soldier extends Tower {
-  contructor(x, y) {
-
-  }
-}
-
-class Projectile {
-  constructor(x, y, direction, speed, pierce) {
-    this.x = x;
-    this.y = y;
-    this.size = 50;
-    this.direction = direction;
-    this.speed = speed;
-    this.pierce = pierce;
-  }
-}
-
 //the map, used to easily distinguish path cell from non path cell
 class Cells {
-  constructor(x, y, size) {
+  constructor(x, y, size, placeable) {
     this.x = x;
     this.y = y;
     this.size = size;
+    this.canPlace = placeable;
   }
-}
-
-//creates a new 2d array 
-function createArray() {
-  let newArray = [];
-  for (let y = 0; y < map.height; y++) {
-    newArray.push([]);
-  }
-  return newArray;
 }
 
 //used during setup, and when game is reset
 function startGame() {
-  //creates cell objects
   for (let y = 0; y < map.height; y++) {
+    newGrid[y] = [];
     for (let x = 0; x < map.width; x++) {
-      grid[y][x] = new Cells(y * cell.height, x * cell.width, cell.size);
+      if (grid[y][x] === 1) {
+        map.path = true;
+      }
+      else {
+        map.path = false;
+      }
+      newGrid[y][x] = new Cells(x * cell.size, y * cell.size, cell.size, !map.path);
     }
   }
 }
@@ -152,11 +117,11 @@ function startGame() {
 function displayGrid() {
   for (let y = 0; y < map.height; y++) {
     for (let x = 0; x < map.width; x++) {
-      if (grid[y][x] === map.open) {
-        image(grassIMG, x*cell.size, y*cell.size, cell.size, cell.size);
+      if (newGrid[y][x].canPlace) { 
+        image(grassIMG, newGrid[y][x].x, newGrid[y][x].y, cell.size, cell.size);
       }
-      if (grid[y][x] === map.path) {
-        image(pathIMG, x*cell.size, y*cell.size, cell.size, cell.size);
+      if (!newGrid[y][x].canPlace) {
+        image(pathIMG, newGrid[y][x].x, newGrid[y][x].y, cell.size, cell.size);
       }
     }
   }
