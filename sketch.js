@@ -9,6 +9,10 @@ let cell = {
   height: 0,
 };
 
+const waypoints = [
+  {x: 156.40625, y: 301.7777777777778},
+];
+
 let testEnemy;
 
 let map = {
@@ -36,6 +40,7 @@ function setup() {
   cell.width = windowWidth / map.width;
   cell.height = windowHeight / map.height;
   grid = map.easy;
+  console.clear();
 }
 
 function windowResized() {
@@ -50,13 +55,17 @@ function draw() {
   startGame();
   displayGrid();
   if (testEnemy) {
-    testEnemy.moveToPoint();
+    testEnemy.findNextPoint();
   }
-    
 }
 
 function mousePressed() {
   testEnemy = new Enemy(cellCenter(0, 3).x, cellCenter(0, 3).y);
+  // console.log('mouseX', mouseX);
+  // console.log('mouseY', mouseY);
+  console.log('waypoints', cellCenter(0, 3).x, cellCenter(0, 3).y);
+  console.log('waypoints', cellCenter(2, 3).x, cellCenter(2, 3).y);
+  
 }
 
 function cellCenter(x, y) {
@@ -90,17 +99,44 @@ class Enemy {
 
   findNextPoint() {
     //figure out the vector of the next point the enemy has to move to
+    this.center = {
+      x: this.x + this.width / 2,
+      y: this.y + this.height / 2
+    };
+    const waypoint = waypoints[this.waypointIndex];
+    const yDistance = waypoint.y - this.center.y;
+    const xDistance = waypoint.x - this.center.x;
+    const angle = Math.atan(yDistance, xDistance);
+    console.log(angle);
+
+    const speed = 3;
+
+    this.velocity.x = Math.cos(angle) * speed;
+    this.velocity.y = Math.sin(angle) * speed;
+
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+
+    circle(this.x,this.y, 50);
+
+    if (
+      Math.abs(Math.round(this.center.x) - Math.round(waypoint.x)) < Math.abs(this.velocity.x) &&
+      Math.abs(Math.round(this.center.y) - Math.round(waypoint.y)) < Math.abs(this.velocity.y) &&
+      this.waypointIndex < waypoints.length - 1) { 
+      this.waypointIndex++;
+      //console.log('x', this.x);
+      //console.log('y', this.y);
+    }
   }
 
   moveToPoint() {
     //moves to the point given by the findNextPoint function
     let waypoint = {
-      x: cellCenter(3, 3).x,
-      y: cellCenter(3, 3).y,
+      x: cellCenter(2, 3).x,
+      y: cellCenter(2, 3).y,
     };
     circle(this.x,this.y, 50);
     let angle = Math.atan2(waypoint.y, waypoint.x) * 180 / Math.PI;
-    console.log('angle', angle);
     let speed = 3;
 
     this.velocity.x = Math.tan(angle) * speed;
