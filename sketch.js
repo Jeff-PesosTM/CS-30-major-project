@@ -9,7 +9,7 @@ let cell = {
   height: 0,
 };
 
-const waypoints = [
+let waypoints = [
   {x: 156.40625, y: 301.7777777777778}, //1
   {x: 156.40625, y: 129.33333333333334}, //2
   {x: 406.65625, y: 129.33333333333334}, //3
@@ -51,23 +51,14 @@ function setup() {
   cell.height = windowHeight / map.height;
   grid = map.easy;
   console.clear();
-  console.log('waypoint 1', cellCenter(2, 3).x, cellCenter(2, 3).y);
-  console.log('waypoint 2', cellCenter(2, 1).x, cellCenter(2, 1).y);
-  console.log('waypoint 3', cellCenter(6, 1).x, cellCenter(6, 1).y);
-  console.log('waypoint 4', cellCenter(6, 5).x, cellCenter(6, 5).y);
-  console.log('waypoint 5', cellCenter(4, 5).x, cellCenter(4, 5).y);
-  console.log('waypoint 6', cellCenter(4, 7).x, cellCenter(4, 7).y);
-  console.log('waypoint 7', cellCenter(12, 7).x, cellCenter(12, 7).y);
-  console.log('waypoint 8', cellCenter(12, 4).x, cellCenter(12, 4).y);
-  console.log('waypoint 9', cellCenter(10, 4).x, cellCenter(10, 4).y);
-  console.log('waypoint 10', cellCenter(10, 2).x, cellCenter(10, 2).y);
-  console.log('waypoint 11', cellCenter(15, 2).x, cellCenter(15, 2).y);
+  setupWaypoints();
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   cell.width = windowWidth / map.width;
   cell.height = windowHeight / map.height;
+  setupWaypoints();
 }
 
 function draw() {
@@ -75,7 +66,7 @@ function draw() {
   startGame();
   displayGrid();
   if (testEnemy) {
-    testEnemy.moveToPoint();
+    testEnemy.moveAlongTrack();
   }
 }
 
@@ -93,6 +84,41 @@ function cellCenter(x, y) {
   return middle;
 }
 
+function setupWaypoints() {
+  waypoints[0].x = cellCenter(2, 3).x;
+  waypoints[0].y = cellCenter(2, 3).y;
+
+  waypoints[1].x =  cellCenter(2, 1).x;
+  waypoints[1].y = cellCenter(2, 1).y;
+
+  waypoints[2].x = cellCenter(6, 1).x;
+  waypoints[2].y = cellCenter(6, 1).y;
+
+  waypoints[3].x = cellCenter(6, 5).x;
+  waypoints[3].y = cellCenter(6, 5).y;
+
+  waypoints[4].x = cellCenter(4, 5).x;
+  waypoints[4].y = cellCenter(4, 5).y;
+
+  waypoints[5].x = cellCenter(4, 7).x;
+  waypoints[5].y = cellCenter(4, 7).y;
+
+  waypoints[6].x = cellCenter(12, 7).x;
+  waypoints[6].y = cellCenter(12, 7).y;
+
+  waypoints[7].x = cellCenter(12, 4).x;
+  waypoints[7].y = cellCenter(12, 4).y;
+
+  waypoints[8].x = cellCenter(10, 4).x;
+  waypoints[8].y = cellCenter(10, 4).y;
+
+  waypoints[9].x = cellCenter(10, 2).x;
+  waypoints[9].y = cellCenter(10, 2).y;
+
+  waypoints[10].x = cellCenter(15, 2).x;
+  waypoints[10].y = cellCenter(15, 2).y;
+}
+
 class Enemy {
   constructor(x, y) {
     this.x = x;
@@ -106,63 +132,29 @@ class Enemy {
       y: this.y + this.height / 2,
     };
     this.health = 100;
-    this.velocity = {
-      x: 0,
-      y: 0,
-    };
   }
 
-  findNextPoint() {
+  moveAlongTrack() {
     //figure out the vector of the next point the enemy has to move to
     const waypoint = waypoints[this.waypointIndex];
-    const speed = 3;
+    let speed = 3;
 
-    if (this.x <= waypoint.x - speed || this.x >= waypoint.x + speed) {
-      this.x += this.speed;
+    if (this.x <= waypoint.x - speed) {
+      this.x += speed;
     }
-    if (this.y <= waypoint.y - speed || this.y >= waypoint.y + speed) {
-      this.y += this.speed;
+    else if (this.x >= waypoint.x + speed) {
+      this.x -= speed;
     }
-
+    else if (this.y <= waypoint.y - speed) {
+      this.y += speed;
+    }
+    else if (this.y >= waypoint.y + speed) {
+      this.y -= speed;
+    }
     circle(this.x,this.y, 50);
-
     if (
-      Math.abs(Math.round(this.x) - Math.round(waypoint.x)) < Math.abs(this.velocity.x) &&
-      Math.abs(Math.round(this.y) - Math.round(waypoint.y)) < Math.abs(this.velocity.y) &&
+      Math.abs(Math.round(this.x) - Math.round(waypoint.x)) <= Math.abs(speed) && Math.abs(Math.round(this.y) - Math.round(waypoint.y)) <= Math.abs(speed) &&
       this.waypointIndex < waypoints.length - 1) { 
-      this.waypointIndex++;
-    }
-  }
-
-  moveToPoint() {
-    //moves to the point given by the findNextPoint function
-    const waypoint = waypoints[this.waypointIndex];
-    const yDistance = waypoint.y - this.y;
-    const xDistance = waypoint.x - this.x;
-    const angle = Math.atan2(yDistance, xDistance);
-
-    const speed = 3;
-
-    circle(this.x,this.y, 50);
-
-    this.velocity.x = Math.cos(angle) * speed;
-    this.velocity.y = Math.sin(angle) * speed;
-
-    this.x += this.velocity.x;
-    this.y += this.velocity.y;
-
-    this.center = {
-      x: this.x + this.width / 2,
-      y: this.y + this.height / 2
-    };
-
-    if (
-      Math.abs(Math.round(this.x) - Math.round(waypoint.x)) <
-        Math.abs(this.velocity.x) &&
-      Math.abs(Math.round(this.y) - Math.round(waypoint.y)) <
-        Math.abs(this.velocity.y) &&
-      this.waypointIndex < waypoints.length - 1
-    ) {
       this.waypointIndex++;
     }
   }
