@@ -137,8 +137,8 @@ class Enemy {
   moveToPoint() {
     //moves to the point given by the findNextPoint function
     const waypoint = waypoints[this.waypointIndex];
-    const yDistance = waypoint.y - this.center.y;
-    const xDistance = waypoint.x - this.center.x;
+    const yDistance = waypoint.y - this.y;
+    const xDistance = waypoint.x - this.x;
     const angle = Math.atan2(yDistance, xDistance);
 
     const speed = 3;
@@ -157,9 +157,9 @@ class Enemy {
     };
 
     if (
-      Math.abs(Math.round(this.center.x) - Math.round(waypoint.x)) <
+      Math.abs(Math.round(this.x) - Math.round(waypoint.x)) <
         Math.abs(this.velocity.x) &&
-      Math.abs(Math.round(this.center.y) - Math.round(waypoint.y)) <
+      Math.abs(Math.round(this.y) - Math.round(waypoint.y)) <
         Math.abs(this.velocity.y) &&
       this.waypointIndex < waypoints.length - 1
     ) {
