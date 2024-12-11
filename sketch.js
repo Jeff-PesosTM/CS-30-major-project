@@ -222,15 +222,11 @@ class Tower {
 
   aimAtTarget(target) {
     let aimAngle = atan2(target.y - this.y, target.x - this.x);
-    let old = {
-      x: this.x,
-      y: this.y,
-    };
 
     push();
     translate(this.x, this.y);
     rotate(aimAngle);
-    triangle(old.x, old.y, old.x + this.size/2, old.y + this.size/2, old.x - this.size/2, old.y + this.size/2);
+    triangle(0, 0, 0 + this.size/2, 0 + this.size/2, 0 - this.size/2, 0 + this.size/2);
     pop();
   }
 }
