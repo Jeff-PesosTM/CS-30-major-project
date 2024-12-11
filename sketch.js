@@ -4,6 +4,10 @@
 
 let grid = [];
 let newGrid = [];
+
+let enemyArray = [];
+let towerArray = [];
+
 let cell = {
   width: 0,
   height: 0,
@@ -24,6 +28,7 @@ let waypoints = [
 ];
 
 let testEnemy;
+let testTower;
 
 let map = {
   width: 16,
@@ -46,6 +51,7 @@ function rightClick(event) {
 
 //16 by 9 grid
 function setup() {
+  angleMode(DEGREES);
   createCanvas(windowWidth, windowHeight);
   cell.width = windowWidth / map.width;
   cell.height = windowHeight / map.height;
@@ -65,13 +71,18 @@ function draw() {
   background(0);
   startGame();
   displayGrid();
-  if (testEnemy) {
-    testEnemy.moveAlongTrack();
-  }
+  displayEnemies();
+  displaytowers();
 }
 
-function mousePressed() {
+function keyPressed() {
   testEnemy = new Enemy(cellCenter(0, 3).x, cellCenter(0, 3).y);
+  enemyArray.push(testEnemy);
+}
+
+function mouseReleased() {
+  testTower = new Tower(mouseX, mouseY, 50, 1);
+  towerArray.push(testTower);
 }
 
 function cellCenter(x, y) {
@@ -88,7 +99,7 @@ function setupWaypoints() {
   waypoints[0].x = cellCenter(2, 3).x;
   waypoints[0].y = cellCenter(2, 3).y;
 
-  waypoints[1].x =  cellCenter(2, 1).x;
+  waypoints[1].x = cellCenter(2, 1).x;
   waypoints[1].y = cellCenter(2, 1).y;
 
   waypoints[2].x = cellCenter(6, 1).x;
@@ -119,6 +130,26 @@ function setupWaypoints() {
   waypoints[10].y = cellCenter(15, 2).y;
 }
 
+function displayEnemies() {
+  for (let theEnemy of enemyArray) {
+    theEnemy.moveAlongTrack();
+    for (let someTower of towerArray) {
+      let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
+      if (inRange) {
+        someTower.aimAtTarget(theEnemy);
+        console.log('test');
+      }
+    }
+  }
+}
+
+function displaytowers() {
+  for (let theTower of towerArray) {
+    theTower.displayTower();
+    theTower.displayTowerRange();
+  }
+}
+
 class Enemy {
   constructor(x, y) {
     this.x = x;
@@ -135,10 +166,9 @@ class Enemy {
   }
 
   moveAlongTrack() {
-    //figure out the vector of the next point the enemy has to move to
+    //go to the coordinates provided by the waypoint list
     const waypoint = waypoints[this.waypointIndex];
     let speed = 3;
-
     if (this.x <= waypoint.x - speed) {
       this.x += speed;
     }
@@ -151,7 +181,7 @@ class Enemy {
     else if (this.y >= waypoint.y + speed) {
       this.y -= speed;
     }
-    circle(this.x,this.y, 50);
+    circle(this.x,this.y, 50); /// replace later
     if (
       Math.abs(Math.round(this.x) - Math.round(waypoint.x)) <= Math.abs(speed) && Math.abs(Math.round(this.y) - Math.round(waypoint.y)) <= Math.abs(speed) &&
       this.waypointIndex < waypoints.length - 1) { 
@@ -168,6 +198,40 @@ class Cells {
     this.width = width;
     this.height = height;
     this.canPlace = placeable;
+  }
+}
+
+class Tower {
+  constructor(x, y, size, type) {
+    this.towerType = type;
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.range = 300;
+  }
+
+  displayTower() {
+    triangle(this.x, this.y, this.x + this.size/2, this.y + this.size/2, this.x - this.size/2, this.y + this.size/2);
+  }
+
+  displayTowerRange() {
+    fill(150, 150, 150, 30);
+    circle(this.x, this.y, this.range);
+    fill(255);
+  }
+
+  aimAtTarget(target) {
+    let aimAngle = atan2(target.y - this.y, target.x - this.x);
+    let old = {
+      x: this.x,
+      y: this.y,
+    };
+
+    push();
+    translate(this.x, this.y);
+    rotate(aimAngle);
+    triangle(old.x, old.y, old.x + this.size/2, old.y + this.size/2, old.x - this.size/2, old.y + this.size/2);
+    pop();
   }
 }
 
