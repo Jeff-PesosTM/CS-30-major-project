@@ -7,6 +7,7 @@ let newGrid = [];
 
 let enemyArray = [];
 let towerArray = [];
+let projectileArray = [];
 
 let cell = {
   width: 0,
@@ -43,12 +44,6 @@ function preload() {
   map.easy = loadJSON("easy_map.json");
 }
 
-//prevents right click from making context menu show up
-addEventListener("contextmenu", rightClick, false);
-function rightClick(event) {
-  event.preventDefault();
-}
-
 //16 by 9 grid
 function setup() {
   angleMode(DEGREES);
@@ -70,9 +65,10 @@ function windowResized() {
 function draw() {
   background(0);
   startGame();
-  displayGrid();
-  displayEnemies();
-  displaytowers();
+  showGrid();
+  showEnemies();
+  showTowers();
+
 }
 
 function keyPressed() {
@@ -130,24 +126,29 @@ function setupWaypoints() {
   waypoints[10].y = cellCenter(15, 2).y;
 }
 
-function displayEnemies() {
+function showEnemies() {
   for (let theEnemy of enemyArray) {
     theEnemy.moveAlongTrack();
     for (let someTower of towerArray) {
       let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
       if (inRange) {
         someTower.aimAtTarget(theEnemy);
-        console.log('test');
       }
     }
   }
 }
 
-function displaytowers() {
+function showTowers() {
   for (let theTower of towerArray) {
     theTower.displayTower();
     theTower.displayTowerRange();
   }
+}
+
+function showProjectiles() {
+  // for (let thing of projectileArray) {
+  //   thing.displayProjectile();
+  // }
 }
 
 class Enemy {
@@ -208,10 +209,12 @@ class Tower {
     this.y = y;
     this.size = size;
     this.range = 300;
+    this.lastShot = 0;
+    this.cd = 100; // cooldown on shooting
   }
 
   displayTower() {
-    triangle(this.x, this.y, this.x + this.size/2, this.y + this.size/2, this.x - this.size/2, this.y + this.size/2);
+    circle(this.x, this.y, this.size);
   }
 
   displayTowerRange() {
@@ -222,14 +225,59 @@ class Tower {
 
   aimAtTarget(target) {
     let aimAngle = atan2(target.y - this.y, target.x - this.x);
-
     push();
     translate(this.x, this.y);
     rotate(aimAngle);
-    triangle(0, 0, 0 + this.size/2, 0 + this.size/2, 0 - this.size/2, 0 + this.size/2);
+    line(0, 0, this.size*2, this.size/2);
+    pop();
+    if (millis() - this.lastShot > this.cd) {
+      this.spawnNewProjectile(aimAngle);
+    }
+    this.shootAtTarget();
+  }
+
+  spawnNewProjectile(angle) {
+    projectileArray.push(new Projectile(0, 0, 3, angle));
+  }
+
+  shootAtTarget() {
+    this.lastShot = millis();
+    for (let thing of projectileArray) {
+      showProjectiles();
+      thing.goToEnemy();
+    }
+  }
+}
+
+class Projectile {
+  constructor(x, y, velocity, angle) {
+    this.x = x;
+    this.y = y;
+    this.velocity = velocity;
+    this.size = 50;
+    this.angle = angle;
+  }
+
+  displayProjectile() {
+    fill("red");
+    circle(this.x, this.y, this.size);
+    fill("white");
+  }
+  
+  goToEnemy() {
+    push();
+    translate(this.x, this.y);
+    rotate(this.angle);
+    this.displayProjectile();
     pop();
   }
 }
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
 
 //used during setup, and when game is reset
 function startGame() {
@@ -249,7 +297,7 @@ function startGame() {
   ///
 }
 
-function displayGrid() {
+function showGrid() {
   for (let y = 0; y < map.height; y++) {
     for (let x = 0; x < map.width; x++) {
       if (newGrid[y][x].canPlace) { 
