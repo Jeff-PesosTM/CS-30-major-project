@@ -147,7 +147,6 @@ function showTowers() {
 
 function showProjectiles() {
   for (let thing of projectileArray) {
-    //thing.displayProjectile();
     thing.goToEnemy();
   }
 }
@@ -211,7 +210,7 @@ class Tower {
     this.size = size;
     this.range = 300;
     this.lastShot = 0;
-    this.cd = 100; // cooldown on shooting
+    this.cd = 1000; // cooldown on shooting
     this.aimAngle = 0;
   }
 
@@ -242,7 +241,6 @@ class Tower {
 
   shootAtTarget() {
     if (millis() - this.lastShot >= this.cd) {
-      console.log("test");
       this.spawnNewProjectile(this.aimAngle);
     }
   }
@@ -261,12 +259,6 @@ class Projectile {
     this.angle = angle;
   }
 
-  displayProjectile() {
-    fill("red");
-    circle(this.x, this.y, this.size/2);
-    fill("white");
-  }
-  
   goToEnemy() {
     push();
     translate(this.origin.x, this.origin.y);
@@ -274,7 +266,6 @@ class Projectile {
     fill("red");
     this.x += this.velocity;
     circle(this.x, this.y, this.size/2);
-    fill("white");
     pop();
   }
 }
