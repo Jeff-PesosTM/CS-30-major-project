@@ -68,7 +68,7 @@ function draw() {
   showGrid();
   showEnemies();
   showTowers();
-
+  showProjectiles();
 }
 
 function keyPressed() {
@@ -146,9 +146,10 @@ function showTowers() {
 }
 
 function showProjectiles() {
-  // for (let thing of projectileArray) {
-  //   thing.displayProjectile();
-  // }
+  for (let thing of projectileArray) {
+    //thing.displayProjectile();
+    thing.goToEnemy();
+  }
 }
 
 class Enemy {
@@ -211,6 +212,7 @@ class Tower {
     this.range = 300;
     this.lastShot = 0;
     this.cd = 100; // cooldown on shooting
+    this.aimAngle = 0;
   }
 
   displayTower() {
@@ -224,35 +226,36 @@ class Tower {
   }
 
   aimAtTarget(target) {
-    let aimAngle = atan2(target.y - this.y, target.x - this.x);
+    this.aimAngle = atan2(target.y - this.y, target.x - this.x);
     push();
     translate(this.x, this.y);
-    rotate(aimAngle);
+    rotate(this.aimAngle);
     line(0, 0, this.size*2, this.size/2);
     pop();
-    if (millis() - this.lastShot > this.cd) {
-      this.spawnNewProjectile(aimAngle);
-    }
     this.shootAtTarget();
   }
 
   spawnNewProjectile(angle) {
-    projectileArray.push(new Projectile(0, 0, 3, angle));
+    this.lastShot = millis();
+    projectileArray.push(new Projectile(this.x, this.y, 10, angle));
   }
 
   shootAtTarget() {
-    this.lastShot = millis();
-    for (let thing of projectileArray) {
-      showProjectiles();
-      thing.goToEnemy();
+    if (millis() - this.lastShot >= this.cd) {
+      console.log("test");
+      this.spawnNewProjectile(this.aimAngle);
     }
   }
 }
 
 class Projectile {
   constructor(x, y, velocity, angle) {
-    this.x = x;
-    this.y = y;
+    this.origin = {
+      x: x,
+      y: y,
+    };
+    this.x = 0;
+    this.y = 0;
     this.velocity = velocity;
     this.size = 50;
     this.angle = angle;
@@ -260,15 +263,18 @@ class Projectile {
 
   displayProjectile() {
     fill("red");
-    circle(this.x, this.y, this.size);
+    circle(this.x, this.y, this.size/2);
     fill("white");
   }
   
   goToEnemy() {
     push();
-    translate(this.x, this.y);
+    translate(this.origin.x, this.origin.y);
     rotate(this.angle);
-    this.displayProjectile();
+    fill("red");
+    this.x += this.velocity;
+    circle(this.x, this.y, this.size/2);
+    fill("white");
     pop();
   }
 }
