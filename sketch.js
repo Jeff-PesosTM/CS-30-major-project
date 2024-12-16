@@ -229,19 +229,16 @@ class Tower {
     push();
     translate(this.x, this.y);
     rotate(this.aimAngle);
-    line(0, 0, this.size*2, this.size/2);
+    line(0, 0, this.size*2, 0);
     pop();
     this.shootAtTarget();
   }
 
-  spawnNewProjectile(angle) {
-    this.lastShot = millis();
-    projectileArray.push(new Projectile(this.x, this.y, 10, angle));
-  }
-
+  //collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
   shootAtTarget() {
     if (millis() - this.lastShot >= this.cd) {
-      this.spawnNewProjectile(this.aimAngle);
+      this.lastShot = millis();
+      projectileArray.push(new Projectile(this.x, this.y, 10, this.aimAngle));
     }
   }
 }
