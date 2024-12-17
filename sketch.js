@@ -41,7 +41,7 @@ let map = {
 function preload() {
   grassIMG = loadImage("assets/grass.png");
   pathIMG = loadImage("assets/pavement.png");
-  map.easy = loadJSON("easy_map.json");
+  map.easy = loadJSON("assets/easy_map.json");
 }
 
 //16 by 9 grid
@@ -126,71 +126,6 @@ function setupWaypoints() {
   waypoints[10].y = cellCenter(15, 2).y;
 }
 
-function showEnemies() {
-  for (let theEnemy of enemyArray) {
-    theEnemy.moveAlongTrack();
-    for (let someTower of towerArray) {
-      let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
-      if (inRange) {
-        someTower.aimAtTarget(theEnemy);
-      }
-    }
-  }
-}
-
-function showTowers() {
-  for (let theTower of towerArray) {
-    theTower.displayTower();
-    theTower.displayTowerRange();
-  }
-}
-
-function showProjectiles() {
-  for (let thing of projectileArray) {
-    thing.goToEnemy();
-  }
-}
-
-class Enemy {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.size = 50;
-    this.width = 100;
-    this.height = 100;
-    this.waypointIndex = 0;
-    this.center = {
-      x: this.x + this.width / 2,
-      y: this.y + this.height / 2,
-    };
-    this.health = 100;
-  }
-
-  moveAlongTrack() {
-    //go to the coordinates provided by the waypoint list
-    const waypoint = waypoints[this.waypointIndex];
-    let speed = 3;
-    if (this.x <= waypoint.x - speed) {
-      this.x += speed;
-    }
-    else if (this.x >= waypoint.x + speed) {
-      this.x -= speed;
-    }
-    else if (this.y <= waypoint.y - speed) {
-      this.y += speed;
-    }
-    else if (this.y >= waypoint.y + speed) {
-      this.y -= speed;
-    }
-    circle(this.x,this.y, 50); /// replace later
-    if (
-      Math.abs(Math.round(this.x) - Math.round(waypoint.x)) <= Math.abs(speed) && Math.abs(Math.round(this.y) - Math.round(waypoint.y)) <= Math.abs(speed) &&
-      this.waypointIndex < waypoints.length - 1) { 
-      this.waypointIndex++;
-    }
-  }
-}
-
 //the map, used to easily distinguish path cell from non path cell
 class Cells {
   constructor(x, y, width, height, placeable) {
@@ -201,77 +136,6 @@ class Cells {
     this.canPlace = placeable;
   }
 }
-
-class Tower {
-  constructor(x, y, size, type) {
-    this.towerType = type;
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.range = 300;
-    this.lastShot = 0;
-    this.cd = 1000; // cooldown on shooting
-    this.aimAngle = 0;
-  }
-
-  displayTower() {
-    circle(this.x, this.y, this.size);
-  }
-
-  displayTowerRange() {
-    fill(150, 150, 150, 30);
-    circle(this.x, this.y, this.range);
-    fill(255);
-  }
-
-  aimAtTarget(target) {
-    this.aimAngle = atan2(target.y - this.y, target.x - this.x);
-    push();
-    translate(this.x, this.y);
-    rotate(this.aimAngle);
-    line(0, 0, this.size*2, 0);
-    pop();
-    this.shootAtTarget();
-  }
-
-  //collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
-  shootAtTarget() {
-    if (millis() - this.lastShot >= this.cd) {
-      this.lastShot = millis();
-      projectileArray.push(new Projectile(this.x, this.y, 10, this.aimAngle));
-    }
-  }
-}
-
-class Projectile {
-  constructor(x, y, velocity, angle) {
-    this.origin = {
-      x: x,
-      y: y,
-    };
-    this.x = 0;
-    this.y = 0;
-    this.velocity = velocity;
-    this.size = 50;
-    this.angle = angle;
-  }
-
-  goToEnemy() {
-    push();
-    translate(this.origin.x, this.origin.y);
-    rotate(this.angle);
-    fill("red");
-    this.x += this.velocity;
-    circle(this.x, this.y, this.size/2);
-    pop();
-  }
-}
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////
 
 //used during setup, and when game is reset
 function startGame() {
@@ -301,5 +165,30 @@ function showGrid() {
         image(pathIMG, newGrid[y][x].x, newGrid[y][x].y, cell.width, cell.height);
       }
     }
+  }
+}
+
+function showEnemies() {
+  for (let theEnemy of enemyArray) {
+    theEnemy.moveAlongTrack();
+    for (let someTower of towerArray) {
+      let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
+      if (inRange) {
+        someTower.aimAtTarget(theEnemy);
+      }
+    }
+  }
+}
+
+function showTowers() {
+  for (let theTower of towerArray) {
+    theTower.displayTower();
+    theTower.displayTowerRange();
+  }
+}
+
+function showProjectiles() {
+  for (let thing of projectileArray) {
+    thing.goToEnemy();
   }
 }
