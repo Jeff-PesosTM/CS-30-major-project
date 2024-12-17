@@ -1,11 +1,3 @@
-// let projectileArray = [];
-
-// function showProjectiles() {
-//   for (let thing of projectileArray) {
-//     thing.goToEnemy();
-//   }
-// }
-
 class Projectile {
   constructor(x, y, velocity, angle) {
     this.origin = {

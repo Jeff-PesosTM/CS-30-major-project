@@ -1,24 +1,3 @@
-// let enemyArray = [];
-
-// let testEnemy;
-
-// function keyPressed() {
-//   testEnemy = new Enemy(cellCenter(0, 3).x, cellCenter(0, 3).y);
-//   enemyArray.push(testEnemy);
-// }
-
-// function showEnemies() {
-//   for (let theEnemy of enemyArray) {
-//     theEnemy.moveAlongTrack();
-//     for (let someTower of towerArray) {
-//       let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
-//       if (inRange) {
-//         someTower.aimAtTarget(theEnemy);
-//       }
-//     }
-//   }
-// }
-
 class Enemy {
   constructor(x, y) {
     this.x = x;

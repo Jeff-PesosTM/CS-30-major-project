@@ -1,18 +1,3 @@
-// let towerArray = [];
-// let testTower;
-
-// function mouseReleased() {
-//   testTower = new Tower(mouseX, mouseY, 50, 1);
-//   towerArray.push(testTower);
-// }
-
-// function showTowers() {
-//   for (let theTower of towerArray) {
-//     theTower.displayTower();
-//     theTower.displayTowerRange();
-//   }
-// }
-
 class Tower {
   constructor(x, y, size, type) {
     this.towerType = type;
