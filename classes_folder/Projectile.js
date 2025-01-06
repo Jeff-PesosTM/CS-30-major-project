@@ -19,5 +19,7 @@ class Projectile {
     this.x += this.velocity;
     circle(this.x, this.y, this.size/2);
     pop();
+    console.log(this.x);
+    console.log(this.y);
   }
 }

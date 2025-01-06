@@ -10,7 +10,8 @@ class Enemy {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2,
     };
-    this.health = 100;
+    this.health = 3;
+    this.remove = false;
   }
 
   moveAlongTrack() {

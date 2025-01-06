@@ -40,6 +40,7 @@ function draw() {
   showEnemies();
   showTowers();
   showProjectiles();
+  //checkRemoval();
 }
 
 function keyPressed() {
@@ -48,8 +49,10 @@ function keyPressed() {
 }
 
 function mouseReleased() {
-  testTower = new Tower(mouseX, mouseY, 50, 1);
-  towerArray.push(testTower);
+  if (newGrid[Math.floor(mouseY/cell.height)][Math.floor(mouseX/cell.width)].canPlace) {
+    testTower = new Tower(mouseX, mouseY, 50, 1);
+    towerArray.push(testTower);
+  }
 }
 
 //used during setup, and when game is reset
@@ -86,6 +89,19 @@ function showGrid() {
 function showEnemies() {
   for (let theEnemy of enemyArray) {
     theEnemy.moveAlongTrack();
+    
+    for (let someProj of projectileArray) {
+      let isTouching = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someProj.x, someProj.y, someProj.size);
+      if (isTouching) {
+        theEnemy.health--;
+        console.log("health--");
+        if (theEnemy.health <= 0) {
+          theEnemy.remove = true;
+          console.log("remove state");
+        }
+      }
+    }
+
     for (let someTower of towerArray) {
       let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
       if (inRange) {
@@ -105,5 +121,13 @@ function showTowers() {
 function showProjectiles() {
   for (let thing of projectileArray) {
     thing.goToEnemy();
+  }
+}
+
+function checkRemoval() {
+  for (let i = 0; i < enemyArray.length; i++) {
+    if (enemyArray[i].remove) {
+      enemyArray.splice(i, 1);
+    }
   }
 }
