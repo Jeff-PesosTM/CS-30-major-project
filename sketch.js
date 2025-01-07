@@ -6,6 +6,8 @@ let enemyArray = [];
 let towerArray = [];
 let projectileArray = [];
 
+let id = 0;
+
 let testEnemy;
 let testTower;
 
@@ -40,7 +42,7 @@ function draw() {
   showEnemies();
   showTowers();
   showProjectiles();
-  //checkRemoval();
+  checkRemoval();
 }
 
 function keyPressed() {
@@ -89,16 +91,14 @@ function showGrid() {
 function showEnemies() {
   for (let theEnemy of enemyArray) {
     theEnemy.moveAlongTrack();
-    
+
     for (let someProj of projectileArray) {
-      let isTouching = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someProj.x, someProj.y, someProj.size);
-      if (isTouching) {
+      let isTouching = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someProj.coords.x, someProj.coords.y, someProj.size/2);
+      if (isTouching && !theEnemy.ignore.includes(someProj.id)) {
         theEnemy.health--;
+        someProj.pierced++;
         console.log("health--");
-        if (theEnemy.health <= 0) {
-          theEnemy.remove = true;
-          console.log("remove state");
-        }
+        theEnemy.ignore.push(someProj.id);
       }
     }
 
@@ -126,8 +126,16 @@ function showProjectiles() {
 
 function checkRemoval() {
   for (let i = 0; i < enemyArray.length; i++) {
-    if (enemyArray[i].remove) {
+    // dealth deletion
+    if (enemyArray[i].health <= 0) {
       enemyArray.splice(i, 1);
     }
+  }
+  for (let i = 0; i < projectileArray.length; i++) {
+    // pierce cap deletion
+    if (projectileArray[i].pierced >= projectileArray[i].pierceCap) {
+      projectileArray.splice(i, 1);
+    }
+    //else if (projectileArray[i].)
   }
 }

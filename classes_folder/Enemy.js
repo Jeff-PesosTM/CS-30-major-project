@@ -11,7 +11,7 @@ class Enemy {
       y: this.y + this.height / 2,
     };
     this.health = 3;
-    this.remove = false;
+    this.ignore = [];
   }
 
   moveAlongTrack() {

@@ -30,11 +30,11 @@ class Tower {
     this.shootAtTarget();
   }
 
-  //collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
   shootAtTarget() {
     if (millis() - this.lastShot >= this.cd) {
       this.lastShot = millis();
-      projectileArray.push(new Projectile(this.x, this.y, 10, this.aimAngle));
+      projectileArray.push(new Projectile(this.x, this.y, 10, this.aimAngle, id));
+      id++;
     }
   }
 }

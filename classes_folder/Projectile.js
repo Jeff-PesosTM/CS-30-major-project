@@ -1,14 +1,20 @@
 class Projectile {
-  constructor(x, y, velocity, angle) {
+  constructor(x, y, velocity, angle, id) {
+    this.id = id,
     this.origin = {
       x: x,
       y: y,
     };
-    this.x = 0;
-    this.y = 0;
+    this.dist = 0;
     this.velocity = velocity;
     this.size = 50;
     this.angle = angle;
+    this.pierceCap = 3;
+    this.pierced = 0;
+    this.coords = {
+      x: 0,
+      y: 0,
+    };
   }
 
   goToEnemy() {
@@ -16,10 +22,10 @@ class Projectile {
     translate(this.origin.x, this.origin.y);
     rotate(this.angle);
     fill("red");
-    this.x += this.velocity;
-    circle(this.x, this.y, this.size/2);
+    this.dist += this.velocity;
+    circle(this.dist, 0, this.size/2);
     pop();
-    console.log(this.x);
-    console.log(this.y);
+    this.coords.x = this.origin.x + cos(this.angle) * this.dist;
+    this.coords.y = this.origin.y + sin(this.angle) * this.dist;
   }
 }
