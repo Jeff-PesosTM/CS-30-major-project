@@ -8,6 +8,8 @@ let projectileArray = [];
 
 let id = 0;
 
+let gui;
+
 let testEnemy;
 let testTower;
 
@@ -21,7 +23,9 @@ function preload() {
 function setup() {
   angleMode(DEGREES);
   createCanvas(windowWidth, windowHeight);
-  cell.width = windowWidth / map.width;
+  ui.width = windowWidth/15;
+  ui.height = windowHeight;
+  cell.width = (windowWidth - ui.width) / map.width;
   cell.height = windowHeight / map.height;
   grid = map.easy;
   console.clear();
@@ -45,6 +49,7 @@ function draw() {
   showTowers();
   showProjectiles();
   checkRemoval();
+  doGui();
   drawGui();
 }
 

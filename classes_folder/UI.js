@@ -1,24 +1,20 @@
 //make the ui stuff in here with gui library
 
-let gui;
-
-let button = {
-  play: 0,
+let ui = {
+  width: 0,
+  height: 0,
 };
 
+let btn;
+
 function setupGui() {
-  button.play = createButton("Button", 100, 50, 200, 50);
+  btn = createButton("Button", 100, 50, 200, 50);
 }
 
-function drawGui() {
-  if (button.play.isPressed) {
+function doGui() {
+  if (btn.isPressed) {
     // Print a message when Button is pressed.
-    print(button.play.label + " pressed.");
-  }
-  
-  if (button.play.isHeld) {
-    // Draw an ellipse when Button is held.
-    fill(255, 0, 0);
-    ellipse(200, 300, 100);
+    console.log("thingamobob");
+    circle(0, 0, 50);
   }
 }
