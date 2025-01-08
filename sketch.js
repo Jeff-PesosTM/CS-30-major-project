@@ -26,6 +26,8 @@ function setup() {
   grid = map.easy;
   console.clear();
   setupWaypoints();
+  gui = createGui();
+  setupGui();
 }
 
 function windowResized() {
@@ -43,6 +45,7 @@ function draw() {
   showTowers();
   showProjectiles();
   checkRemoval();
+  drawGui();
 }
 
 function keyPressed() {
@@ -72,7 +75,6 @@ function startGame() {
       newGrid[y][x] = new Cells(x * cell.width, y * cell.height, cell.width, cell.height, !map.path);
     }
   }
-  ///
 }
 
 function showGrid() {
