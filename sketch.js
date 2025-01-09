@@ -8,6 +8,8 @@ let projectileArray = [];
 
 let id = 0;
 
+let wave = 0;
+
 let gui;
 
 let testEnemy;
@@ -51,11 +53,6 @@ function draw() {
   checkRemoval();
   doGui();
   drawGui();
-}
-
-function keyPressed() {
-  testEnemy = new Enemy(cellCenter(0, 3).x, cellCenter(0, 3).y);
-  enemyArray.push(testEnemy);
 }
 
 function mouseReleased() {
@@ -129,6 +126,23 @@ function showProjectiles() {
   for (let thing of projectileArray) {
     thing.goToEnemy();
   }
+}
+
+let intervalID;
+function sendWave() {
+  intervalID = setInterval(sendEnemy, 1000);
+  wave++;
+}
+let i = 0;
+
+function sendEnemy() {
+  i++;
+  if (i >= wave) {
+    clearInterval(intervalID);
+    i = 0;
+  }
+  testEnemy = new Enemy(cellCenter(0, 3).x, cellCenter(0, 3).y);
+  enemyArray.push(testEnemy);
 }
 
 function checkRemoval() {

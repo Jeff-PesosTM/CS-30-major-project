@@ -8,13 +8,12 @@ let ui = {
 let btn;
 
 function setupGui() {
-  btn = createButton("Button", 100, 50, 200, 50);
+  btn = createButton("Start", windowWidth-ui.width + 10, 50, ui.width-20, 50);
 }
 
 function doGui() {
   if (btn.isPressed) {
     // Print a message when Button is pressed.
-    console.log("thingamobob");
-    circle(0, 0, 50);
+    sendWave();
   }
 }
