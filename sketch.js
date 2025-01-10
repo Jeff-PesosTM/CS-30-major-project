@@ -7,10 +7,10 @@ let towerArray = [];
 let projectileArray = [];
 
 let intervalID;
-let i = 0;
+let i = 0; // used to count enemies spawned by a wave
 let wave = 0;
-let spawning = false;
-let id = 0;
+let spawning = false; // prevents sending multiple waves at once
+let id = 0; // enemy id to prevent one projectile damaging it multiple times
 
 let gui;
 
