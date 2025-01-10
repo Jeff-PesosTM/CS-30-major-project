@@ -6,9 +6,11 @@ let enemyArray = [];
 let towerArray = [];
 let projectileArray = [];
 
-let id = 0;
-
+let intervalID;
+let i = 0;
 let wave = 0;
+let spawning = false;
+let id = 0;
 
 let gui;
 
@@ -32,15 +34,15 @@ function setup() {
   grid = map.easy;
   console.clear();
   setupWaypoints();
-  gui = createGui();
-  setupGui();
+  gui = createGui(); // neccessary library function
+  setupGui(); // makes the gui buttons
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   cell.width = windowWidth / map.width;
   cell.height = windowHeight / map.height;
-  setupWaypoints();
+  setupWaypoints(); // calculates where the waypoints should be according to cell size
 }
 
 function draw() {
@@ -50,13 +52,15 @@ function draw() {
   showEnemies();
   showTowers();
   showProjectiles();
-  checkRemoval();
-  doGui();
-  drawGui();
+  checkRemoval(); //removes redundant objects like dead enemies and off screen projectiles
+  doGui(); // gui logic
+  drawGui(); // required library func
 }
 
 function mouseReleased() {
-  if (newGrid[Math.floor(mouseY/cell.height)][Math.floor(mouseX/cell.width)].canPlace) {
+  //places a tower on mouse release
+  if (newGrid[Math.floor(mouseY/cell.height)][Math.floor(mouseX/cell.width)].canPlace && towerSelected) {
+    towerSelected = false;
     testTower = new Tower(mouseX, mouseY, 50, 1);
     towerArray.push(testTower);
   }
@@ -101,7 +105,6 @@ function showEnemies() {
       if (isTouching && !theEnemy.ignore.includes(someProj.id)) {
         theEnemy.health--;
         someProj.pierced++;
-        console.log("health--");
         theEnemy.ignore.push(someProj.id);
       }
     }
@@ -118,7 +121,15 @@ function showEnemies() {
 function showTowers() {
   for (let theTower of towerArray) {
     theTower.displayTower();
-    theTower.displayTowerRange();
+    //displays tower range when the tower is pressed
+    if (mouseIsPressed && mouseX-theTower.size/2 <= theTower.x && mouseX+theTower.size/2 >= theTower.x &&
+                          mouseY-theTower.size/2 <= theTower.y && mouseY+theTower.size/2 >= theTower.y) {
+      theTower.displayTowerRange();
+    }
+  }
+  //circle that follows the mouse when placing a tower
+  if (towerSelected) {
+    circle(mouseX, mouseY, 50);
   }
 }
 
@@ -128,17 +139,19 @@ function showProjectiles() {
   }
 }
 
-let intervalID;
 function sendWave() {
-  intervalID = setInterval(sendEnemy, 1000);
-  wave++;
+  if (spawning === false) {
+    spawning = true;
+    intervalID = setInterval(sendEnemy, 1000);
+    wave++;
+  }
 }
-let i = 0;
 
 function sendEnemy() {
   i++;
   if (i >= wave) {
     clearInterval(intervalID);
+    spawning = false;
     i = 0;
   }
   testEnemy = new Enemy(cellCenter(0, 3).x, cellCenter(0, 3).y);
@@ -151,12 +164,19 @@ function checkRemoval() {
     if (enemyArray[i].health <= 0) {
       enemyArray.splice(i, 1);
     }
+    //end of map deletion
+    else if (enemyArray[i].x >= waypoints[10].x - 5) {
+      enemyArray.splice(i, 1);
+    }
   }
   for (let i = 0; i < projectileArray.length; i++) {
     // pierce cap deletion
     if (projectileArray[i].pierced >= projectileArray[i].pierceCap) {
       projectileArray.splice(i, 1);
     }
-    //else if (projectileArray[i].)
+    //out of bounds deletion
+    else if (projectileArray[i].coords.x >= windowWidth.x - ui.width || projectileArray[i].coords.x <= 0 || projectileArray[i].coords.y <= 0 || projectileArray[i].coords.y >= windowWidth) {
+      projectileArray.splice(i, 1);
+    }
   }
 }

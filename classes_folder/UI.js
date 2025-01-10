@@ -5,15 +5,23 @@ let ui = {
   height: 0,
 };
 
-let btn;
+let button = {
+  start: 0,
+  tower: 0,
+};
+
+let towerSelected = false;
 
 function setupGui() {
-  btn = createButton("Start", windowWidth-ui.width + 10, 50, ui.width-20, 50);
+  button.start = createButton("Start", windowWidth-ui.width + 10, 50, ui.width-20, 50);
+  button.tower = createButton("Tower", windowWidth-ui.width + 10, 100, ui.width-20, 50);
 }
 
 function doGui() {
-  if (btn.isPressed) {
-    // Print a message when Button is pressed.
+  if (button.start.isPressed) {
     sendWave();
+  }
+  if (button.tower.isPressed) {
+    towerSelected = true;
   }
 }
