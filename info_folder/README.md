@@ -2,8 +2,6 @@
 CS30 major project
 
 
-use gui library
-use collision library
 
 infantry/field guns/tanks
 base/more pierce and faster projectile/expensive and explosion with long reload 
