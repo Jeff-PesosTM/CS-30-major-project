@@ -12,6 +12,11 @@ let wave = 0;
 let spawning = false; // prevents sending multiple waves at once
 let id = 0; // enemy id to prevent one projectile damaging it multiple times
 
+let money = 50;
+let lives = 10;
+
+let towerSelection = 0;
+
 let gui;
 
 let testEnemy;
@@ -26,6 +31,7 @@ function preload() {
 //16 by 9 grid
 function setup() {
   angleMode(DEGREES);
+  textAlign(LEFT);
   createCanvas(windowWidth, windowHeight);
   ui.width = windowWidth/15;
   ui.height = windowHeight;
@@ -59,10 +65,11 @@ function draw() {
 
 function mouseReleased() {
   //places a tower on mouse release
-  if (newGrid[Math.floor(mouseY/cell.height)][Math.floor(mouseX/cell.width)].canPlace && towerSelected) {
+  if (newGrid[Math.floor(mouseY/cell.height)][Math.floor(mouseX/cell.width)].canPlace && towerSelected && money >= 25) {
     towerSelected = false;
-    testTower = new Tower(mouseX, mouseY, 50, 1);
+    testTower = new Tower(mouseX, mouseY, 50, towerSelection);
     towerArray.push(testTower);
+    money -= 25;
   }
 }
 
@@ -140,6 +147,7 @@ function showProjectiles() {
 }
 
 function sendWave() {
+  // spawns and enemy every second using the send enemy function
   if (spawning === false) {
     spawning = true;
     intervalID = setInterval(sendEnemy, 1000);
@@ -148,6 +156,7 @@ function sendWave() {
 }
 
 function sendEnemy() {
+  //used in the send wave function
   i++;
   if (i >= wave) {
     clearInterval(intervalID);
@@ -159,14 +168,17 @@ function sendEnemy() {
 }
 
 function checkRemoval() {
+  //cleans up redundant stuff to maintain performance
   for (let i = 0; i < enemyArray.length; i++) {
     // dealth deletion
     if (enemyArray[i].health <= 0) {
       enemyArray.splice(i, 1);
+      money += 5;
     }
     //end of map deletion
     else if (enemyArray[i].x >= waypoints[10].x - 5) {
       enemyArray.splice(i, 1);
+      lives--;
     }
   }
   for (let i = 0; i < projectileArray.length; i++) {

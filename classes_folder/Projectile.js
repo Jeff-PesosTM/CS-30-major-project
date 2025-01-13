@@ -18,6 +18,9 @@ class Projectile {
   }
 
   goToEnemy() {
+    // oh my days this was a pain in the ass, translates the coordinate system to be rotated around the point of the tower that fired it,
+    // and then just increases its distance away along the x axis, then it converts the aim angle and distance away into coordinates on the normal
+    // system to allow for collision detection
     push();
     translate(this.origin.x, this.origin.y);
     rotate(this.angle);

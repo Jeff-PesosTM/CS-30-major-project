@@ -1,6 +1,6 @@
 class Tower {
   constructor(x, y, size, type) {
-    this.towerType = type;
+    this.towerType = type; // 1 = basic, 2 = sniper, 3 = ambush
     this.x = x;
     this.y = y;
     this.size = size;
@@ -11,6 +11,18 @@ class Tower {
   }
 
   displayTower() {
+    if (this.towerType === 1) {
+      this.range = 300;
+      this.cd = 1000;
+    }
+    if (this.towerType === 2) {
+      this.range = 900;
+      this.cd = 3000;
+    }
+    if (this.towerType === 3) {
+      this.range = 150;
+      this.cd = 250;
+    }
     circle(this.x, this.y, this.size);
   }
 
