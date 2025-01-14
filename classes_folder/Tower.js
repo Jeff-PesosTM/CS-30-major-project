@@ -8,20 +8,28 @@ class Tower {
     this.lastShot = 0;
     this.cd = 1000; // cooldown on shooting
     this.aimAngle = 0;
+    this.shotPower = 10;
+    this.pierce = 3;
   }
 
   displayTower() {
-    if (this.towerType === 1) {
+    if (this.towerType === 1) { // basic
       this.range = 300;
       this.cd = 1000;
+      this.shotPower = 10;
+      this.pierce = 2;
     }
-    if (this.towerType === 2) {
+    if (this.towerType === 2) { // sniper
       this.range = 900;
       this.cd = 3000;
+      this.shotPower = 20;
+      this.pierce = 3;
     }
-    if (this.towerType === 3) {
-      this.range = 150;
+    if (this.towerType === 3) { // ambush
+      this.range = 250;
       this.cd = 250;
+      this.shotPower = 8;
+      this.pierce = 1;
     }
     circle(this.x, this.y, this.size);
   }
@@ -33,7 +41,7 @@ class Tower {
   }
 
   aimAtTarget(target) {
-    this.aimAngle = atan2(target.y - this.y, target.x - this.x);
+    this.aimAngle = atan2(target.y + target.lead.y - this.y, target.x + target.lead.x - this.x);
     push();
     translate(this.x, this.y);
     rotate(this.aimAngle);
@@ -45,7 +53,7 @@ class Tower {
   shootAtTarget() {
     if (millis() - this.lastShot >= this.cd) {
       this.lastShot = millis();
-      projectileArray.push(new Projectile(this.x, this.y, 10, this.aimAngle, id));
+      projectileArray.push(new Projectile(this.x, this.y, this.shotPower, this.aimAngle, id, this.pierce));
       id++;
     }
   }

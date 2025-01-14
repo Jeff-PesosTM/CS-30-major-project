@@ -1,5 +1,5 @@
 class Projectile {
-  constructor(x, y, velocity, angle, id) {
+  constructor(x, y, velocity, angle, id, pierce) {
     this.id = id,
     this.origin = {
       x: x,
@@ -9,7 +9,7 @@ class Projectile {
     this.velocity = velocity;
     this.size = 50;
     this.angle = angle;
-    this.pierceCap = 3;
+    this.pierceCap = pierce;
     this.pierced = 0;
     this.coords = {
       x: 0,

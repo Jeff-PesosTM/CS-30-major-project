@@ -12,6 +12,10 @@ class Enemy {
     };
     this.health = 3;
     this.ignore = [];
+    this.lead = {
+      y: 0,
+      x: 0,
+    };
   }
 
   moveAlongTrack() {
@@ -20,15 +24,23 @@ class Enemy {
     let speed = 3;
     if (this.x <= waypoint.x - speed) {
       this.x += speed;
+      this.lead.x = speed * 10;
+      this.lead.y = 0;
     }
     else if (this.x >= waypoint.x + speed) {
       this.x -= speed;
+      this.lead.x = -speed * 10;
+      this.lead.y = 0;
     }
     else if (this.y <= waypoint.y - speed) {
       this.y += speed;
+      this.lead.x = 0;
+      this.lead.y = speed * 10;
     }
     else if (this.y >= waypoint.y + speed) {
       this.y -= speed;
+      this.lead.x = 0;
+      this.lead.y = -speed * 10;
     }
     circle(this.x,this.y, 50); /// replace later
     if (

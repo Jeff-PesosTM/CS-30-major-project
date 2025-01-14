@@ -2,6 +2,10 @@
 // Grady chovan
 // start date: 11/19/2024
 
+let game = {
+  state: "playing",
+};
+
 let enemyArray = [];
 let towerArray = [];
 let projectileArray = [];
@@ -15,12 +19,16 @@ let id = 0; // enemy id to prevent one projectile damaging it multiple times
 let money = 50;
 let lives = 10;
 
-let towerSelection = 0;
-
 let gui;
 
 let testEnemy;
 let testTower;
+
+let tower = {
+  selected: false,
+  pick: 0,
+  cost: 50,
+};
 
 function preload() {
   grassIMG = loadImage("assets/grass.png");
@@ -42,6 +50,7 @@ function setup() {
   setupWaypoints();
   gui = createGui(); // neccessary library function
   setupGui(); // makes the gui buttons
+  startGame();
 }
 
 function windowResized() {
@@ -53,23 +62,27 @@ function windowResized() {
 
 function draw() {
   background(0);
-  startGame();
-  showGrid();
-  showEnemies();
-  showTowers();
-  showProjectiles();
-  checkRemoval(); //removes redundant objects like dead enemies and off screen projectiles
-  doGui(); // gui logic
-  drawGui(); // required library func
+  if (game.state === "playing") {
+    showGrid();
+    showEnemies();
+    showTowers();
+    showProjectiles();
+    checkRemoval(); //removes redundant objects like dead enemies and off screen projectiles
+    doGui(); // gui logic
+    drawGui(); // required library func
+  }
+  else if (game.state === "gameover") {
+    gameOverScreen();
+  }
 }
 
 function mouseReleased() {
   //places a tower on mouse release
-  if (newGrid[Math.floor(mouseY/cell.height)][Math.floor(mouseX/cell.width)].canPlace && towerSelected && money >= 25) {
-    towerSelected = false;
-    testTower = new Tower(mouseX, mouseY, 50, towerSelection);
+  if (newGrid[Math.floor(mouseY/cell.height)][Math.floor(mouseX/cell.width)].canPlace && tower.selected && money >= tower.cost) {
+    tower.selected = false;
+    testTower = new Tower(mouseX, mouseY, 50, tower.pick);
     towerArray.push(testTower);
-    money -= 25;
+    money -= tower.cost;
   }
 }
 
@@ -135,7 +148,7 @@ function showTowers() {
     }
   }
   //circle that follows the mouse when placing a tower
-  if (towerSelected) {
+  if (tower.selected) {
     circle(mouseX, mouseY, 50);
   }
 }
@@ -179,6 +192,9 @@ function checkRemoval() {
     else if (enemyArray[i].x >= waypoints[10].x - 5) {
       enemyArray.splice(i, 1);
       lives--;
+      if (lives <= 0) {
+        game.state = "gameover";
+      }
     }
   }
   for (let i = 0; i < projectileArray.length; i++) {

@@ -12,8 +12,6 @@ let button = {
   ambush: 0,
 };
 
-let towerSelected = false;
-
 function setupGui() {
   button.start = createButton("Start", windowWidth-ui.width + 10, 50, ui.width-20, 50);
   button.basic = createButton("basic", windowWidth-ui.width + 10, 100, ui.width-20, 50);
@@ -32,16 +30,19 @@ function doGui() {
   }
   if (money >= 25) {
     if (button.basic.isPressed) {
-      towerSelection = 1;
-      towerSelected = true;
+      tower.pick = 1;
+      tower.selected = true;
+      tower.cost = 25;
     }
     if (button.sniper.isPressed) {
-      towerSelection = 2;
-      towerSelected = true;
+      tower.pick = 2;
+      tower.selected = true;
+      tower.cost = 50;
     }
     if (button.ambush.isPressed) {
-      towerSelection = 3;
-      towerSelected = true;
+      tower.pick = 3;
+      tower.selected = true;
+      tower.cost = 100;
     }
   }
 }
