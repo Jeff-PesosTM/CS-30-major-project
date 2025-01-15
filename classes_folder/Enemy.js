@@ -19,30 +19,37 @@ class Enemy {
   }
 
   moveAlongTrack() {
+    imageMode(CENTER);
     //go to the coordinates provided by the waypoint list
     const waypoint = waypoints[this.waypointIndex];
     let speed = 3;
-    if (this.x <= waypoint.x - speed) {
+    if (this.x <= waypoint.x - speed) { // right
       this.x += speed;
       this.lead.x = speed * 10;
       this.lead.y = 0;
     }
-    else if (this.x >= waypoint.x + speed) {
+    else if (this.x >= waypoint.x + speed) { // left
       this.x -= speed;
       this.lead.x = -speed * 10;
       this.lead.y = 0;
     }
-    else if (this.y <= waypoint.y - speed) {
+    else if (this.y <= waypoint.y - speed) { // down
       this.y += speed;
       this.lead.x = 0;
       this.lead.y = speed * 10;
     }
-    else if (this.y >= waypoint.y + speed) {
+    else if (this.y >= waypoint.y + speed) { // up
+      sprite.skeleton.play();
+      image(sprite.skeleton, this.x , this.y);
       this.y -= speed;
       this.lead.x = 0;
       this.lead.y = -speed * 10;
     }
-    circle(this.x,this.y, 50); /// replace later
+    circle(this.x,this.y, 5); /// replace later
+    if (sprite.skeleton.getCurrentFrame() > 7) {
+      sprite.skeleton.pause();
+      sprite.skeleton.reset();
+    }
     if (
       Math.abs(Math.round(this.x) - Math.round(waypoint.x)) <= Math.abs(speed) && Math.abs(Math.round(this.y) - Math.round(waypoint.y)) <= Math.abs(speed) &&
       this.waypointIndex < waypoints.length - 1) { 

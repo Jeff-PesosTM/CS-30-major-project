@@ -6,6 +6,10 @@ let game = {
   state: "playing",
 };
 
+let sprite = {
+  skeleton: 0,
+};
+
 let enemyArray = [];
 let towerArray = [];
 let projectileArray = [];
@@ -34,6 +38,7 @@ function preload() {
   grassIMG = loadImage("assets/grass.png");
   pathIMG = loadImage("assets/pavement.png");
   map.easy = loadJSON("assets/easy_map.json");
+  sprite.skeleton = loadImage("assets/skeleton.gif");
 }
 
 //16 by 9 grid
@@ -41,6 +46,7 @@ function setup() {
   angleMode(DEGREES);
   textAlign(LEFT);
   createCanvas(windowWidth, windowHeight);
+  sprite.skeleton.delay(200);
   ui.width = windowWidth/15;
   ui.height = windowHeight;
   cell.width = (windowWidth - ui.width) / map.width;
@@ -104,6 +110,7 @@ function startGame() {
 }
 
 function showGrid() {
+  imageMode(CORNER);
   for (let y = 0; y < map.height; y++) {
     for (let x = 0; x < map.width; x++) {
       if (newGrid[y][x].canPlace) { 
