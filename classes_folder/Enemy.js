@@ -24,23 +24,29 @@ class Enemy {
     const waypoint = waypoints[this.waypointIndex];
     let speed = 3;
     if (this.x <= waypoint.x - speed) { // right
+      sprite.skeleton.play();
+      image(sprite.skeleton, this.x , this.y, 64, 64, 0, 192, 64, 64);
       this.x += speed;
       this.lead.x = speed * 10;
       this.lead.y = 0;
     }
     else if (this.x >= waypoint.x + speed) { // left
+      sprite.skeleton.play();
+      image(sprite.skeleton, this.x , this.y, 64, 64, 0, 64, 64, 64);
       this.x -= speed;
       this.lead.x = -speed * 10;
       this.lead.y = 0;
     }
     else if (this.y <= waypoint.y - speed) { // down
+      sprite.skeleton.play();
+      image(sprite.skeleton, this.x , this.y, 64, 64, 0, 128, 64, 64);
       this.y += speed;
       this.lead.x = 0;
       this.lead.y = speed * 10;
     }
     else if (this.y >= waypoint.y + speed) { // up
       sprite.skeleton.play();
-      image(sprite.skeleton, this.x , this.y);
+      image(sprite.skeleton, this.x , this.y, 64, 64, 0, 0, 64, 64);
       this.y -= speed;
       this.lead.x = 0;
       this.lead.y = -speed * 10;
