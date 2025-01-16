@@ -8,6 +8,7 @@ let game = {
 
 let sprite = {
   skeleton: 0,
+  tank: 0,
 };
 
 let enemyArray = [];
@@ -39,6 +40,7 @@ function preload() {
   pathIMG = loadImage("assets/pavement.png");
   map.easy = loadJSON("assets/easy_map.json");
   sprite.skeleton = loadImage("assets/skeleton.gif");
+  sprite.tank = loadImage("assets/pzIV.png");
 }
 
 //16 by 9 grid
@@ -46,7 +48,7 @@ function setup() {
   angleMode(DEGREES);
   textAlign(LEFT);
   createCanvas(windowWidth, windowHeight);
-  sprite.skeleton.delay(200);
+  sprite.skeleton.delay(100);
   ui.width = windowWidth/15;
   ui.height = windowHeight;
   cell.width = (windowWidth - ui.width) / map.width;
@@ -57,6 +59,11 @@ function setup() {
   gui = createGui(); // neccessary library function
   setupGui(); // makes the gui buttons
   startGame();
+  tower.pick = {
+    basic: "basic",
+    sniper: "sniper",
+    ambush: "ambush",
+  };
 }
 
 function windowResized() {

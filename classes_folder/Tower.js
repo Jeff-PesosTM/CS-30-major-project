@@ -13,25 +13,26 @@ class Tower {
   }
 
   displayTower() {
-    if (this.towerType === 1) { // basic
+    if (this.towerType === tower.pick.basic) { // basic
       this.range = 300;
       this.cd = 1000;
       this.shotPower = 10;
       this.pierce = 2;
     }
-    if (this.towerType === 2) { // sniper
+    if (this.towerType === tower.pick.sniper) { // sniper
       this.range = 900;
       this.cd = 3000;
       this.shotPower = 20;
       this.pierce = 3;
+      image(sprite.tank, this.x, this.y);
     }
-    if (this.towerType === 3) { // ambush
+    if (this.towerType === tower.pick.ambush) { // ambush
       this.range = 250;
       this.cd = 250;
       this.shotPower = 8;
       this.pierce = 1;
     }
-    circle(this.x, this.y, this.size);
+    circle(this.x, this.y, 5);
   }
 
   displayTowerRange() {
