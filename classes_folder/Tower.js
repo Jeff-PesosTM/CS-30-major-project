@@ -25,7 +25,7 @@ class Tower {
       this.cd = 3000;
       this.shotPower = 20;
       this.pierce = 3;
-      image(sprite.tank, this.x, this.y, 120, 240, 0, 0, 120, 300);
+      //image(sprite.tank, this.x, this.y, 120, 240, 0, 0, 120, 300);
     }
     if (this.towerType === "ambush") {
       this.range = 250;
@@ -43,11 +43,16 @@ class Tower {
   }
 
   aimAtTarget(target) {
-    this.aimAngle = atan2(target.y + target.lead.y - this.y, target.x + target.lead.x - this.x);
+    this.aimAngle = atan2(target.y - this.y, target.x - this.x);
+    //this.aimAngle = atan2(target.y + target.lead.y - this.y, target.x + target.lead.x - this.x);
     push();
     translate(this.x, this.y);
     rotate(this.aimAngle);
-    line(0, 0, this.size*2, 0);
+    if (this.towerType === "sniper") {
+      image(sprite.tank, 0, 0, 120, 240, 136, 0, 120, 240);
+      line(0, 0, this.size*2, 0);
+    }
+
     pop();
     this.shootAtTarget();
   }
