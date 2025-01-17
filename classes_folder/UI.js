@@ -30,17 +30,17 @@ function doGui() {
   }
   if (money >= 25) {
     if (button.basic.isPressed) {
-      tower.pick = tower.pick.basic;
+      tower.pick = "basic";
       tower.selected = true;
       tower.cost = 25;
     }
     if (button.sniper.isPressed) {
-      tower.pick = tower.pick.sniper;
+      tower.pick = "sniper";
       tower.selected = true;
       tower.cost = 50;
     }
     if (button.ambush.isPressed) {
-      tower.pick = tower.pick.ambush;
+      tower.pick = "ambush";
       tower.selected = true;
       tower.cost = 100;
     }

@@ -13,20 +13,21 @@ class Tower {
   }
 
   displayTower() {
-    if (this.towerType === tower.pick.basic) { // basic
+    imageMode(CENTER);
+    if (this.towerType === "basic") {
       this.range = 300;
       this.cd = 1000;
       this.shotPower = 10;
       this.pierce = 2;
     }
-    if (this.towerType === tower.pick.sniper) { // sniper
+    if (this.towerType === "sniper") {
       this.range = 900;
       this.cd = 3000;
       this.shotPower = 20;
       this.pierce = 3;
-      image(sprite.tank, this.x, this.y);
+      image(sprite.tank, this.x, this.y, 120, 240, 0, 0, 120, 300);
     }
-    if (this.towerType === tower.pick.ambush) { // ambush
+    if (this.towerType === "ambush") {
       this.range = 250;
       this.cd = 250;
       this.shotPower = 8;

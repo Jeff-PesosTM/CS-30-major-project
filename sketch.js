@@ -59,11 +59,6 @@ function setup() {
   gui = createGui(); // neccessary library function
   setupGui(); // makes the gui buttons
   startGame();
-  tower.pick = {
-    basic: "basic",
-    sniper: "sniper",
-    ambush: "ambush",
-  };
 }
 
 function windowResized() {
