@@ -140,8 +140,11 @@ function showEnemies() {
 
     for (let someTower of towerArray) {
       let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
-      if (inRange) {
+      if (inRange && !someTower.isAiming) {
         someTower.aimAtTarget(theEnemy);
+      }
+      else if (!inRange) {
+        someTower.isAiming = false;
       }
     }
   }

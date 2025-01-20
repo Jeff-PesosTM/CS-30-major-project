@@ -10,6 +10,7 @@ class Tower {
     this.aimAngle = 0;
     this.shotPower = 10;
     this.pierce = 3;
+    this.isAiming = false;
   }
 
   displayTower() {
@@ -21,11 +22,12 @@ class Tower {
       this.pierce = 2;
     }
     if (this.towerType === "sniper") {
+      //image(sprite.tank, this.x, this.y, 240, 128, 0, 120, 240, 128);
+      this.displayTurret();
       this.range = 900;
       this.cd = 3000;
       this.shotPower = 20;
       this.pierce = 3;
-      //image(sprite.tank, this.x, this.y, 120, 240, 0, 0, 120, 300);
     }
     if (this.towerType === "ambush") {
       this.range = 250;
@@ -43,18 +45,21 @@ class Tower {
   }
 
   aimAtTarget(target) {
-    this.aimAngle = atan2(target.y - this.y, target.x - this.x);
     //this.aimAngle = atan2(target.y + target.lead.y - this.y, target.x + target.lead.x - this.x);
+    this.isAiming = true;
+    this.aimAngle = atan2(target.y - this.y, target.x - this.x);
+    this.shootAtTarget();
+  }
+
+  displayTurret() {
     push();
     translate(this.x, this.y);
     rotate(this.aimAngle);
     if (this.towerType === "sniper") {
-      image(sprite.tank, 0, 0, 120, 240, 136, 0, 120, 240);
+      image(sprite.tank, 0, 0, 240, 128, 0, 0, 240, 120);
       line(0, 0, this.size*2, 0);
     }
-
     pop();
-    this.shootAtTarget();
   }
 
   shootAtTarget() {
