@@ -125,6 +125,8 @@ function showGrid() {
   }
 }
 
+let target;
+
 function showEnemies() {
   for (let theEnemy of enemyArray) {
     theEnemy.moveAlongTrack();
@@ -141,10 +143,14 @@ function showEnemies() {
     for (let someTower of towerArray) {
       let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
       if (inRange && !someTower.isAiming) {
-        someTower.aimAtTarget(theEnemy);
+        target = theEnemy;
+        someTower.isAiming = true;
       }
-      else if (!inRange) {
+      if (!inRange || theEnemy.health <= 0) {
         someTower.isAiming = false;
+      }
+      if (inRange) {
+        someTower.aimAtTarget(target);
       }
     }
   }

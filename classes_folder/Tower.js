@@ -46,7 +46,6 @@ class Tower {
 
   aimAtTarget(target) {
     this.aimAngle = atan2(target.y + target.lead.y - this.y, target.x + target.lead.x - this.x);
-    this.isAiming = true;
     this.shootAtTarget();
   }
 
