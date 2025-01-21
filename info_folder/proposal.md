@@ -11,7 +11,6 @@
 - money system DONE
 - purchase towers and place them by the track to defend against the enemies DONE
 - minimum of 3 different tower types DONE
-- attack, destroy and ambient sound effects
 
 ## Nice To Have
 

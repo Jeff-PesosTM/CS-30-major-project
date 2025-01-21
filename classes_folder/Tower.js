@@ -22,7 +22,7 @@ class Tower {
       this.pierce = 2;
     }
     if (this.towerType === "sniper") {
-      //image(sprite.tank, this.x, this.y, 240, 128, 0, 120, 240, 128);
+      image(sprite.tank, this.x, this.y, 240, 128, 0, 120, 240, 128);
       this.displayTurret();
       this.range = 900;
       this.cd = 3000;
@@ -45,9 +45,8 @@ class Tower {
   }
 
   aimAtTarget(target) {
-    //this.aimAngle = atan2(target.y + target.lead.y - this.y, target.x + target.lead.x - this.x);
+    this.aimAngle = atan2(target.y + target.lead.y - this.y, target.x + target.lead.x - this.x);
     this.isAiming = true;
-    this.aimAngle = atan2(target.y - this.y, target.x - this.x);
     this.shootAtTarget();
   }
 
