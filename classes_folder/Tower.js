@@ -1,12 +1,12 @@
 class Tower {
   constructor(x, y, size, type) {
-    this.towerType = type; // 1 = basic, 2 = sniper, 3 = ambush
+    this.towerType = type;
     this.x = x;
     this.y = y;
     this.size = size;
     this.range = 300;
     this.lastShot = 0;
-    this.cd = 1000; // cooldown on shooting
+    this.cd = 1000;
     this.aimAngle = 0;
     this.shotPower = 10;
     this.pierce = 3;
@@ -16,6 +16,7 @@ class Tower {
   displayTower() {
     imageMode(CENTER);
     if (this.towerType === "basic") {
+      circle(this.x, this.y, 50);
       this.range = 300;
       this.cd = 1000;
       this.shotPower = 10;
@@ -30,12 +31,12 @@ class Tower {
       this.pierce = 3;
     }
     if (this.towerType === "ambush") {
+      circle(this.x, this.y, 50);
       this.range = 250;
       this.cd = 250;
       this.shotPower = 8;
       this.pierce = 1;
     }
-    circle(this.x, this.y, 5);
   }
 
   displayTowerRange() {
@@ -55,7 +56,6 @@ class Tower {
     rotate(this.aimAngle);
     if (this.towerType === "sniper") {
       image(sprite.tank, 0, 0, 240, 128, 0, 0, 240, 120);
-      line(0, 0, this.size*2, 0);
     }
     pop();
   }

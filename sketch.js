@@ -29,6 +29,8 @@ let gui;
 let testEnemy;
 let testTower;
 
+let target;
+
 let tower = {
   selected: false,
   pick: 0,
@@ -49,7 +51,7 @@ function setup() {
   textAlign(LEFT);
   createCanvas(windowWidth, windowHeight);
   sprite.skeleton.delay(100);
-  ui.width = windowWidth/15;
+  ui.width = windowWidth/12;
   ui.height = windowHeight;
   cell.width = (windowWidth - ui.width) / map.width;
   cell.height = windowHeight / map.height;
@@ -78,9 +80,6 @@ function draw() {
     checkRemoval(); //removes redundant objects like dead enemies and off screen projectiles
     doGui(); // gui logic
     drawGui(); // required library func
-  }
-  else if (game.state === "gameover") {
-    gameOverScreen();
   }
 }
 
@@ -111,6 +110,7 @@ function startGame() {
   }
 }
 
+// displays the map
 function showGrid() {
   imageMode(CORNER);
   for (let y = 0; y < map.height; y++) {
@@ -125,12 +125,11 @@ function showGrid() {
   }
 }
 
-let target;
-
 function showEnemies() {
   for (let theEnemy of enemyArray) {
     theEnemy.moveAlongTrack();
 
+    //checks if the enemies get hit
     for (let someProj of projectileArray) {
       let isTouching = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someProj.coords.x, someProj.coords.y, someProj.size/2);
       if (isTouching && !theEnemy.ignore.includes(someProj.id)) {
@@ -140,6 +139,7 @@ function showEnemies() {
       }
     }
 
+    //goes through the enemies and the towers to see if they are in range and then shoots or whatever accordingly
     for (let someTower of towerArray) {
       let inRange = collideCircleCircle(theEnemy.x, theEnemy.y, theEnemy.size, someTower.x, someTower.y, someTower.range);
       if (inRange && !someTower.isAiming) {

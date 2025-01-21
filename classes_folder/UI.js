@@ -14,9 +14,9 @@ let button = {
 
 function setupGui() {
   button.start = createButton("Start", windowWidth-ui.width + 10, 50, ui.width-20, 50);
-  button.basic = createButton("basic", windowWidth-ui.width + 10, 100, ui.width-20, 50);
-  button.sniper = createButton("sniper", windowWidth-ui.width + 10, 150, ui.width-20, 50);
-  button.ambush = createButton("ambush", windowWidth-ui.width + 10, 200, ui.width-20, 50);
+  button.basic = createButton("basic: 25", windowWidth-ui.width + 10, 100, ui.width-20, 50);
+  button.sniper = createButton("sniper: 50", windowWidth-ui.width + 10, 150, ui.width-20, 50);
+  button.ambush = createButton("ambush: 100", windowWidth-ui.width + 10, 200, ui.width-20, 50);
 }
 
 function doGui() {
